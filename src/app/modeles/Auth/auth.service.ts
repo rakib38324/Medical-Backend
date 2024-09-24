@@ -5,7 +5,6 @@ import { User } from '../UsersRegistration/userRegistration.model';
 import { TJwtPayload, VerifyToken, createToken } from './auth.utillis';
 import config from '../../config/config';
 import { JwtPayload } from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
 import { sendEmail } from '../../utiles/sendEmail';
 
 const emailVerification = async (payload: EmailVerification) => {
@@ -62,7 +61,6 @@ const resendEmailVerification = async (payload: { email: string }) => {
   const jwtPayload = {
     email,
     name: isUserExists?.name,
-    role: isUserExists?.role,
   };
   //===========> create token and sent to the client
   const resetToken = createToken(
@@ -129,7 +127,6 @@ const loginUser = async (payload: TLoginUser) => {
   const jwtPayload: TJwtPayload = {
     email: isUserExists?.email,
     name: isUserExists?.name,
-    role: isUserExists?.role,
   };
 
   //===========> create token and sent to the client
@@ -153,6 +150,8 @@ const changePassword = async (
   userData: JwtPayload,
   payload: { currentPassword: string; newPassword: string },
 ) => {
+  console.log(payload.currentPassword, payload.newPassword);
+
   //===>check if the user is exists
   const isUserExists = await User.isUserExistsByEmail(userData.email);
 
@@ -172,18 +171,12 @@ const changePassword = async (
     throw new AppError(httpStatus.FORBIDDEN, 'Password is not match!!');
   }
 
-  // ===> hash new password
-  const newHasedPassword = await bcrypt.hash(
-    payload.newPassword,
-    Number(config.bcrypt_salt_round),
-  );
-
   await User.findOneAndUpdate(
     {
       email: userData.email,
     },
     {
-      password: newHasedPassword,
+      password: payload.newPassword,
       passwordChangedAt: new Date(),
     },
   );
@@ -204,7 +197,6 @@ const forgetPassword = async (email: string) => {
   const jwtPayload = {
     email: isUserExists?.email,
     name: isUserExists?.name,
-    role: isUserExists?.role,
   };
 
   //===========> create token and sent to the client
@@ -253,18 +245,12 @@ const resetPassword = async (
     throw new AppError(httpStatus.FORBIDDEN, `You are forbidden!!`);
   }
 
-  ///===> hash new password
-  const newHasedPassword = await bcrypt.hash(
-    payload.newPassword,
-    Number(config.bcrypt_salt_round),
-  );
-
   await User.findOneAndUpdate(
     {
       email: decoded.email,
     },
     {
-      password: newHasedPassword,
+      password: payload.newPassword,
       passwordChangedAt: new Date(),
     },
   );

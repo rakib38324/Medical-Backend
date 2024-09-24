@@ -31,9 +31,7 @@ const updateUserValidationSchema = z.object({
   body: z.object({
     name: z.string().optional(),
     email: z.string().optional(),
-    img: z.string().optional(),
     verified: z.boolean().optional(),
-    role: z.enum(['admin', 'superAdmin', 'user']).optional(),
     password: z
       .string({ required_error: 'Password is required.' })
       .refine((data) => data.length >= passwordMinLength, {

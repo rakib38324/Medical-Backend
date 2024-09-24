@@ -3,7 +3,6 @@ import ValidateRequest from '../../middlewares/validateRequest';
 import { authValidations } from './auth.validation';
 import { authControllers } from './auth.controller';
 import Auth from '../../middlewares/Auth';
-import { USER_ROLE } from '../UsersRegistration/user.constent';
 
 const router = express.Router();
 
@@ -27,7 +26,7 @@ router.post(
 
 router.post(
   '/change-password',
-  Auth(USER_ROLE.admin, USER_ROLE.superAdmin, USER_ROLE.user),
+  Auth(),
   ValidateRequest(authValidations.changePasswordValidationSchema),
   authControllers.changePassword,
 );
@@ -44,6 +43,6 @@ router.post(
   authControllers.resetPassword,
 );
 
-router.get('/me', Auth('superAdmin', 'admin', 'user'), authControllers.getMe);
+router.get('/me', Auth(), authControllers.getMe);
 
 export const loginRouters = router;

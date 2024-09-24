@@ -5,9 +5,7 @@ export type TUser = {
   name: string;
   email: string;
   password: string;
-  img: string;
   verified: boolean;
-  role: 'superAdmin' | 'admin' | 'user';
   passwordChangedAt?: Date;
 };
 

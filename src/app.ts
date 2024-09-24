@@ -24,7 +24,7 @@ app.use(cookieParser());
 app.use('/api/v1', router);
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Medicine E-commerce Server is running successfully.');
+  res.send('Medical Server is running successfully.');
 });
 
 //========> handle the router not found

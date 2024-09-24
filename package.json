@@ -1,5 +1,5 @@
 {
-  "name": "medicine_e-commerce",
+  "name": "medical",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -23,6 +23,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "express-fileupload": "^1.5.1",
     "http-status": "^1.7.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.3",

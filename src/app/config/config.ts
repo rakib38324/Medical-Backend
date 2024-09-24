@@ -18,4 +18,8 @@ export default {
   super_admin_password: process.env.SUPPER_ADMIN_PASSWORD,
   email_vErification_ui_link: process.env.EMAIL_VERIFICATION_UI_LINK,
   reset_password_ui_link: process.env.RESET_PASSWORD_UI_LINK,
+
+  cloudinary_cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  cloudinary_api_key: process.env.CLOUDINARY_API_KEY,
+  cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET,
 };

@@ -2,13 +2,12 @@ import httpStatus from 'http-status';
 import { TUser } from './userRegistration.interface';
 import AppError from '../../errors/appError';
 import { User } from './userRegistration.model';
-import { USER_ROLE } from './user.constent';
 import { createToken } from '../Auth/auth.utillis';
 import config from '../../config/config';
 import { sendEmail } from '../../utiles/sendEmail';
 
-const createUserIntoDB = async (file: any, payload: TUser) => {
-  const { email, name, password } = payload;
+const createUserIntoDB = async (payload: TUser) => {
+  const { email, name } = payload;
   const userExists = await User.findOne({ email });
 
   if (userExists) {
@@ -18,18 +17,12 @@ const createUserIntoDB = async (file: any, payload: TUser) => {
     );
   }
 
-  if (payload?.role === 'superAdmin' || payload?.role === 'admin') {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      'Only Super admin can create Admin or Super Admin account.',
-    );
-  }
-
   const jwtPayload = {
     email,
     name,
     role: 'user',
   };
+
   //===========> create token and sent to the client
   const resetToken = createToken(
     jwtPayload,
@@ -39,7 +32,7 @@ const createUserIntoDB = async (file: any, payload: TUser) => {
 
   const resetUILink = `${config.email_vErification_ui_link}?email=${email}&token=${resetToken}`;
 
-  const subject = 'Verification email from Medicine E-commerce.';
+  const subject = 'Verification email from Medical.';
 
   const html = `
     <div style="font-family: Arial, sans-serif; line-height: 1.5;">
@@ -58,11 +51,7 @@ const createUserIntoDB = async (file: any, payload: TUser) => {
   sendEmail(subject, email, html);
 
   const userInfo = {
-    email,
-    name,
-    password,
-    img: file?.path,
-    role: USER_ROLE.user,
+    ...payload,
     verified: false,
     passwordChangedAt: new Date(),
   };
