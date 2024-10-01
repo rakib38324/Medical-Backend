@@ -1,9 +1,9 @@
-# Welcome to Medicine E-commerce
-This is a small social media site. User Create an account, login, Create post, and also add likes and comments. Also, have authorization functionality.
+# Welcome to Medical website
+This is a small medical website. The user creates an account, logs in, Takes an appointment, and  has authorization functionality.
 
 ER Diagram link--
 ```
-https://lucid.app/lucidchart/9223b95f-dc6c-4d0a-98d8-21555a6265f6/edit?view_items=lAk21TsHQyuZ&invitationId=inv_3dd429df-917b-479d-8b1e-420693607297
+
 ```
 API Documentation link--
 ```
