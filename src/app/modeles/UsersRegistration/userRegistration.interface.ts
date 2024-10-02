@@ -1,12 +1,19 @@
 /* eslint-disable no-unused-vars */
-import { Model } from 'mongoose';
+import { Model, Schema } from 'mongoose';
 
 export type TUser = {
+  [x: string]: any;
   name: string;
   email: string;
   password: string;
   verified: boolean;
   passwordChangedAt?: Date;
+  appointments?: [
+    {
+      type: Schema.Types.ObjectId;
+      ref: 'Appointment';
+    },
+  ];
 };
 
 export interface UserModel extends Model<TUser> {
