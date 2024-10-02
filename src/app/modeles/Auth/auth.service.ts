@@ -143,14 +143,20 @@ const loginUser = async (payload: TLoginUser) => {
     config.jwt_access_expires_in as string,
   );
 
-  return { user: jwtPayload, token: accessToken, refreshToken: refreshToken };
+  const returndata = {
+    name: isUserExists?.name,
+    email: isUserExists?.email,
+    _id: isUserExists?._id,
+  };
+
+  return { user: returndata, token: accessToken, refreshToken: refreshToken };
 };
 
 const changePassword = async (
   userData: JwtPayload,
   payload: { currentPassword: string; newPassword: string },
 ) => {
-  console.log(payload.currentPassword, payload.newPassword);
+  // console.log(payload.currentPassword, payload.newPassword);
 
   //===>check if the user is exists
   const isUserExists = await User.isUserExistsByEmail(userData.email);

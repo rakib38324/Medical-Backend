@@ -12,6 +12,13 @@ const userSchema = new Schema<TUser, UserModel>(
     name: { type: String, required: true },
     verified: { type: Boolean },
     passwordChangedAt: { type: Date },
+    appointments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Appointment',
+        default: [],
+      },
+    ],
   },
   {
     timestamps: true,

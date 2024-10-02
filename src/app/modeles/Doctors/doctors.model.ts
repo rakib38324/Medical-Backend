@@ -8,6 +8,14 @@ const doctorSchema = new Schema<TDoctor>(
     like: { type: String, required: true },
     experience: { type: Number, required: true },
     img: { type: String, required: true },
+    amount: { type: Number, required: true },
+    appointments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Appointment',
+        default: [],
+      },
+    ],
   },
   {
     timestamps: true,
