@@ -8,6 +8,9 @@ export type TUser = {
   password: string;
   verified: boolean;
   passwordChangedAt?: Date;
+  is_online?: string;
+  isDoctor: boolean;
+  doctorId?: Schema.Types.ObjectId;
   appointments?: [
     {
       type: Schema.Types.ObjectId;

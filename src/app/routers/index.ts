@@ -5,6 +5,7 @@ import { doctorsRouter } from '../modeles/Doctors/doctors.router';
 import { testimonialRouter } from '../modeles/Testimonial/testimonial.router';
 import { ourClinicRouter } from '../modeles/ourclinic/ourClinic.router';
 import { AppointmentRouter } from '../modeles/Appointment/appointment.router';
+import { chatrouter } from '../modeles/chatting/chat.router';
 
 const router = Router();
 
@@ -32,6 +33,10 @@ const moduleRouters = [
   {
     path: '/appointment',
     route: AppointmentRouter,
+  },
+  {
+    path: '/chat',
+    route: chatrouter,
   },
 ];
 

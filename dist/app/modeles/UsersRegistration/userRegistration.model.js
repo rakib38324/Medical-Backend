@@ -21,7 +21,13 @@ const userSchema = new mongoose_1.Schema({
     email: { type: String, required: true },
     password: { type: String, required: true },
     name: { type: String, required: true },
+    is_online: { type: String, default: '0' },
     verified: { type: Boolean },
+    isDoctor: { type: Boolean, required: true },
+    doctorId: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'Doctor',
+    },
     passwordChangedAt: { type: Date },
     appointments: [
         {

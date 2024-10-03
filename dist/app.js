@@ -12,10 +12,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const app = (0, express_1.default)();
 //--->parser
 app.use(express_1.default.json());
-app.use((0, cors_1.default)({
-    origin: 'https://atg-client-one.vercel.app',
-    credentials: true,
-}));
+app.use((0, cors_1.default)());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
 //==========>application routes

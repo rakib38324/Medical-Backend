@@ -8,6 +8,7 @@ const createUserValidationSchema = zod_1.z.object({
     body: zod_1.z.object({
         name: zod_1.z.string({ required_error: 'Name is required.' }).min(1),
         email: zod_1.z.string({ required_error: 'Email is required.' }).min(1),
+        isDoctor: zod_1.z.boolean({ required_error: 'You are a doctor or not ?' }),
         password: zod_1.z
             .string({ required_error: 'Password is required.' })
             .refine((data) => data.length >= passwordMinLength, {
