@@ -7,6 +7,7 @@ const doctors_router_1 = require("../modeles/Doctors/doctors.router");
 const testimonial_router_1 = require("../modeles/Testimonial/testimonial.router");
 const ourClinic_router_1 = require("../modeles/ourclinic/ourClinic.router");
 const appointment_router_1 = require("../modeles/Appointment/appointment.router");
+const chat_router_1 = require("../modeles/chatting/chat.router");
 const router = (0, express_1.Router)();
 const moduleRouters = [
     {
@@ -32,6 +33,10 @@ const moduleRouters = [
     {
         path: '/appointment',
         route: appointment_router_1.AppointmentRouter,
+    },
+    {
+        path: '/chat',
+        route: chat_router_1.chatrouter,
     },
 ];
 moduleRouters.forEach((route) => router.use(route.path, route.route));

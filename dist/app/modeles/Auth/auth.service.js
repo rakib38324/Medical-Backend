@@ -176,20 +176,27 @@ const resetPassword = (payload, token) => __awaiter(void 0, void 0, void 0, func
     return 'Your Password Changed Successfully';
 });
 const getMeFromDB = (email) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield userRegistration_model_1.User.aggregate([
-        {
-            $match: { email: email },
-        },
-        {
-            $project: {
-                password: 0,
-                passwordChangedAt: 0,
-                __v: 0,
+    const user = yield userRegistration_model_1.User.findOne({ email: email })
+        .select('-password -passwordChangedAt -__v')
+        .populate({
+        path: 'appointments',
+        populate: [
+            {
+                path: 'doctorId',
+                model: 'User', // Specify the model name for doctorId
+                populate: {
+                    path: 'doctorId', // Nested doctorId inside the doctor's data
+                    model: 'Doctor', // Specify the model name for the nested doctorId
+                },
             },
-        },
-    ]);
-    if ((result === null || result === void 0 ? void 0 : result.length) > 0) {
-        return result[0];
+            {
+                path: 'userId',
+                model: 'User', // Specify the model for userId
+            },
+        ],
+    });
+    if (user) {
+        return user;
     }
     else {
         throw new appError_1.default(http_status_1.default.NOT_FOUND, 'This user not found!');

@@ -265,20 +265,28 @@ const resetPassword = async (
 };
 
 const getMeFromDB = async (email: string) => {
-  const result = await User.aggregate([
-    {
-      $match: { email: email },
-    },
-    {
-      $project: {
-        password: 0,
-        passwordChangedAt: 0,
-        __v: 0,
-      },
-    },
-  ]);
-  if (result?.length > 0) {
-    return result[0];
+  const user = await User.findOne({ email: email })
+    .select('-password -passwordChangedAt -__v')
+    .populate({
+      path: 'appointments',
+      populate: [
+        {
+          path: 'doctorId',
+          model: 'User', // Specify the model name for doctorId
+          populate: {
+            path: 'doctorId', // Nested doctorId inside the doctor's data
+            model: 'Doctor', // Specify the model name for the nested doctorId
+          },
+        },
+        {
+          path: 'userId',
+          model: 'User', // Specify the model for userId
+        },
+      ],
+    });
+
+  if (user) {
+    return user;
   } else {
     throw new AppError(httpStatus.NOT_FOUND, 'This user not found!');
   }
