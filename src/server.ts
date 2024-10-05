@@ -9,7 +9,7 @@ import { Chatting } from './app/modeles/chatting/chatting.model';
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:3000', // Your frontend origin
+    origin: 'https://new-medicale-server-updated.vercel.app', // Your frontend origin
     methods: ['GET', 'POST'],
   },
 });
@@ -33,34 +33,43 @@ io.on('connection', async (socket) => {
   //  user broadcast online status
   socket.broadcast.emit('/getOnlineUser', { userId: _id });
 
-  // Listen for messages
-  socket.on('sendMessage', async (message) => {
-    const chatingPayload = {
-      senderId: message.senderId,
-      receiverId: message.receiverId,
-      message: message.text,
-    };
-    await Chatting.create(chatingPayload);
-    io.emit('receiveMessage', chatingPayload);
-  });
-
-  // Listen for the existing chat event
-  socket.on('existingChat', async ({ senderId, receiverId }) => {
+  // Join a room and fetch existing chats
+  socket.on('joinRoom', async ({ roomId, senderId, receiverId }) => {
+    socket.join(roomId);
+    console.log(`User ${_id} joined roomId: ${roomId}`);
+    console.log(senderId, receiverId);
     try {
-      // console.log(senderId, receiverId)
-      // Query the database to find existing chats between sender and receiver
+      // Fetch existing chats between sender and receiver
       const existingChats = await Chatting.find({
         $or: [
           { senderId: senderId, receiverId: receiverId },
           { senderId: receiverId, receiverId: senderId },
         ],
-      }).sort({ createdAt: 1 }); // Sort by time if needed
+      }).sort({ createdAt: 1 });
 
-      // Send the existing messages back to the frontend
-      io.emit('receiveExistingChat', existingChats);
+      // console.log(existingChats)
+      // Emit existing chats to the room
+      socket.emit('receiveExistingChat', existingChats);
     } catch (err) {
       console.error('Error fetching existing chats:', err);
     }
+  });
+
+  // Handle sending messages
+  socket.on('sendMessage', async (message) => {
+    const chatingPayload = {
+      roomId: message.roomId,
+      senderId: message.senderId,
+      receiverId: message.receiverId,
+      message: message.message,
+    };
+
+    // Save the message to the database
+    await Chatting.create(chatingPayload);
+
+    // Emit the new message to all users in the room
+    io.to(message.roomId).emit('receiveMessage', message);
+    io.emit('outerRoomReceiveMessage', message);
   });
 
   // User disconnects

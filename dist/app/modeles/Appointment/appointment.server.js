@@ -46,7 +46,6 @@ const createAppointmentIntoDB = (payload) => __awaiter(void 0, void 0, void 0, f
     if (!userInfo) {
         throw new appError_1.default(http_status_1.default.BAD_REQUEST, 'User not found.');
     }
-    console.log(userdoctor);
     const updatePayload = {
         doctorId: userdoctor === null || userdoctor === void 0 ? void 0 : userdoctor._id,
         userId: payload.userId,
@@ -60,19 +59,33 @@ const createAppointmentIntoDB = (payload) => __awaiter(void 0, void 0, void 0, f
     yield userRegistration_model_1.User.findByIdAndUpdate({ _id: userdoctor === null || userdoctor === void 0 ? void 0 : userdoctor._id }, { $push: { appointments: newAppointment._id } }, { new: true, runValidators: true });
     // Update user's appointments by pushing the new appointment ID
     yield userRegistration_model_1.User.findByIdAndUpdate(payload === null || payload === void 0 ? void 0 : payload.userId, { $push: { appointments: newAppointment._id } }, { new: true, runValidators: true });
-    const subject = `Your Appointment confirm with Docotr ${doctor === null || doctor === void 0 ? void 0 : doctor.name}`;
-    const html = `
-    <div style="font-family: Arial, sans-serif; line-height: 1.5;">
-      <p>Dear ${userInfo === null || userInfo === void 0 ? void 0 : userInfo.name},</p>
-      <p>This email confirms your appointment with Dr. ${doctor.name} on the Medical platform.</p>
-      <p>You can now chat with Dr. ${doctor.name} to discuss your health concerns.</p>
-      <p><a href="${config_1.default.frontend_ui_link}" style="color: #007bff; text-decoration: none;">Click here to start your chat with Dr. ${doctor.name}.</a></p>
-      <p>We hope this appointment is convenient for you. If you need to reschedule, please contact us at your earliest convenience.</p>
-      <p>Sincerely,</p>
-      <p>The Medical Team</p>
-</div>
-  `;
-    (0, sendEmail_1.sendEmail)(subject, userInfo.email, html);
+    const userSubject = `Your Appointment Confirmed with Dr. ${doctor === null || doctor === void 0 ? void 0 : doctor.name}`;
+    const doctorSubject = `New Appointment Notification: ${userInfo === null || userInfo === void 0 ? void 0 : userInfo.name} with Dr. ${doctor === null || doctor === void 0 ? void 0 : doctor.name}`;
+    const userHtml = `
+  <div style="font-family: Arial, sans-serif; line-height: 1.5;">
+    <p>Dear ${userInfo === null || userInfo === void 0 ? void 0 : userInfo.name},</p>
+    <p>This email confirms your appointment with Dr. ${doctor.name} on the Medical platform.</p>
+    <p>You can now chat with Dr. ${doctor.name} to discuss your health concerns.</p>
+    <p><a href="${config_1.default.frontend_ui_link}" style="color: #007bff; text-decoration: none;">Click here to start your chat with Dr. ${doctor.name}.</a></p>
+    <p>We hope this appointment is convenient for you. If you need to reschedule, please contact us at your earliest convenience.</p>
+    <p>Sincerely,</p>
+    <p>The Medical Team</p>
+  </div>
+`;
+    const doctorHtml = `
+  <div style="font-family: Arial, sans-serif; line-height: 1.5;">
+    <p>Dear Dr. ${doctor.name},</p>
+    <p>This email is to inform you of a new appointment with your patient, ${userInfo === null || userInfo === void 0 ? void 0 : userInfo.name}, on the Medical platform.</p>
+    <p>The appointment is scheduled for the upcoming session. Please be prepared to discuss the patient's health concerns.</p>
+    <p>You can access your chat with ${userInfo === null || userInfo === void 0 ? void 0 : userInfo.name} through the platform.</p>
+    <p><a href="${config_1.default.frontend_ui_link}" style="color: #007bff; text-decoration: none;">Click here to start your chat with your patients</a></p>
+    <p>Thank you for your dedication to patient care.</p>
+    <p>Sincerely,</p>
+    <p>The Medical Team</p>
+  </div>
+`;
+    (0, sendEmail_1.sendEmail)(doctorSubject, userdoctor.email, doctorHtml);
+    (0, sendEmail_1.sendEmail)(userSubject, userInfo.email, userHtml);
     return newAppointment;
 });
 exports.AppointmentServices = {
