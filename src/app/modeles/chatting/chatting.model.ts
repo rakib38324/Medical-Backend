@@ -6,6 +6,7 @@ const ChattingSchemma = new Schema<TChatting>(
     senderId: { type: String, required: true },
     receiverId: { type: String, required: true },
     message: { type: String, required: true },
+    roomId: { type: String, required: true },
   },
   {
     timestamps: true,
